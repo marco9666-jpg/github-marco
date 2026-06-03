@@ -1,0 +1,42 @@
+name: Auto Update Model Prices
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 每天 UTC 00:00 執行
+  workflow_dispatch:       # 允許手動觸發
+
+jobs:
+  update-pricing:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install httpx
+
+      - name: Run Price Updater
+        run: python update_prices.py
+
+      - name: Commit and Push if pricing.json Changed
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          git add pricing.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(pricing): auto-sync model rates from LiteLLM [skip ci]"
+            git push
+            echo "🚀 New rates pushed."
+          else
+            echo "➔ No price changes, skipping commit."
+          fi
