@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "updated_at": "2026-09-14",
+  "updated_at": "2026-09-15",
   "gist_url": "",
   "models": {
     "claude-opus-4": {
@@ -40,8 +40,8 @@
       "output": 4.4
     },
     "gemini-2.0-flash": {
-      "input": 0.1,
-      "output": 0.4
+      "input": 0.15,
+      "output": 0.6
     },
     "gemini-2.5-pro": {
       "input": 1.25,
